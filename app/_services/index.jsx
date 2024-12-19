@@ -2,7 +2,6 @@ import request, { gql } from "graphql-request";
 const MASTER_URL =
   "https://ap-south-1.cdn.hygraph.com/content/cm42ra30n01qq07w3huu22rwa/master";
 
-  
 export const getCourseList = async () => {
   const query = gql`
     query courseList {
@@ -26,51 +25,53 @@ export const getCourseList = async () => {
 export const getCourseById = async (id, userEmail) => {
   const query =
     gql`
-  query course {
-  courseList(where: {id: "` +
+    query course {
+      courseList(where: { id: "` +
     id +
-    `"}) {
-    chapter {
-      ... on Chapter {
+    `" }) {
+        chapter {
+          ... on Chapter {
+            id
+            name
+            video {
+              url
+            }
+            youtubeUrl
+          }
+        }
+        description
         id
         name
-        video {
-          url
+        free
+        totalChapters
+      }
+      userEnrollCourse(
+        where: {
+          courseId: "` +
+    id +
+    `"
+          userEmail: "muhilman606@gmail.com"
         }
-        youtubeUrl
+      ) {
+        courseId
+        userEmail
+        completedChapter
       }
     }
-    description
-    id
-    name
-    free
-    author
-    totalChapters
-  }
-   userEnrollCourse(where: {courseId: "` +
-    id +
-    `", userEmail: "` +
-    userEmail +
-    `"}) {
-    courseId
-    userEmail
-    completedChapter
-  }
-}
   `;
   const result = await request(MASTER_URL, query);
   return result;
 };
 
 export const EnrollCourse = async (courseId, userEmail) => {
-  const mutationQuery =
-    gql`
+  const mutationQuery = gql`
     mutation EnrollCourse {
-      createUserEnrollCourses(data: { userEmail: "` +
-    userEmail +
-    `", courseId: "` +
-    courseId +
-    `" }) {
+      createUserEnrollCourses(
+        data: {
+          userEmail: "muhilman606@gmail.com"
+          courseId: "cm42ra30n01qq07w3huu22rwa"
+        }
+      ) {
         id
       }
     }

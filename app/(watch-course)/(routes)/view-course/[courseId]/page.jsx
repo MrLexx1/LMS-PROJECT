@@ -15,8 +15,8 @@ function ViewCourse({ params }) {
     params?.courseId ? getCourse(params.courseId) : null;
   }, [user]);
 
-  const getCourse = () => {
-    getCourseById(
+  const getCourse = async () => {
+    await getCourseById(
       params?.courseId,
       user?.primaryEmailAddress?.emailAddress
     ).then((resp) => {
