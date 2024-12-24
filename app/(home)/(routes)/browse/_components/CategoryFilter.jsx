@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 
-function CategoryFilter() {
+function CategoryFilter({ selectedCategory }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const filterOptions = [
     {
@@ -12,7 +12,7 @@ function CategoryFilter() {
     {
       id: 2,
       name: "React Js",
-      value: "react",
+      value: "reactjs",
     },
     {
       id: 3,
@@ -26,8 +26,8 @@ function CategoryFilter() {
     },
     {
       id: 5,
-      name: "Firebase",
-      value: "firebase",
+      name: "Node Js",
+      value: "nodejs",
     },
   ];
   return (
@@ -35,7 +35,10 @@ function CategoryFilter() {
       {filterOptions.map((item, index) => (
         <button
           key={index}
-          onClick={() => setActiveIndex(index)}
+          onClick={() => {
+            setActiveIndex(index);
+            selectedCategory(item.value);
+          }}
           className={`border p-2 px-4 text-sm rounded-md hover:border-blue-800 font-semibold hover:bg-gray-50 ${
             activeIndex == index
               ? "border-blue-800 bg-blue-50 text-blue-800"

@@ -7,6 +7,8 @@ import CourseList from "./browse/_components/CourseList";
 
 function Browse() {
   const [courses, setCourses] = useState([]);
+  const [coursesOrg, setCoursesOrg] = useState([]);
+
   useEffect(() => {
     getCourses();
   }, []);
@@ -14,11 +16,25 @@ function Browse() {
     getCourseList().then((resp) => {
       console.log(resp);
       setCourses(resp.courseLists);
+      setCoursesOrg(resp.courseLists);
     });
+  };
+
+  const filterCourse = (category) => {
+    if (category === "All") {
+      setCourses(coursesOrg);
+      return;
+    }
+
+    const filteredList = coursesOrg.filter((course) => {
+      return course.tag.includes(category);
+    });
+
+    setCourses(filteredList);
   };
   return (
     <div>
-      <CategoryFilter />
+      <CategoryFilter selectedCategory={(category) => filterCourse(category)} />
       {courses ? <CourseList courses={courses} /> : null}
     </div>
   );

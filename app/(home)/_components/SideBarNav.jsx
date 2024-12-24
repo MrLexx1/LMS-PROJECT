@@ -1,9 +1,12 @@
 "use client";
 import { Layout, Mail, Search, Shield } from "lucide-react";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import React, { useState } from "react";
 
 function SideBarNav() {
+  const pathName = usePathname();
+  console.log(pathName);
   const menuList = [
     {
       id: 1,
@@ -41,7 +44,7 @@ function SideBarNav() {
           <div
             key={index}
             className={`flex gap-2 items-center p-4 px-6 text-gray-500 hover:bg-gray-100 cursor-pointer ${
-              activeIndex == index ? "bg-blue-50 text-blue-800" : ""
+              pathName == item.path ? "bg-blue-50 text-blue-800" : ""
             }`}
             onClick={() => setActiveIndex(index)}
           >

@@ -1,18 +1,30 @@
-import React from "react";
-import { EnrollCourse } from "../../../../../_services";
+"use client";
+import React, { useState } from "react";
+import { EnrollCourse, PublishCourse } from "../../../../../_services";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 
 function EnrollmentSection({ courseDetail }) {
   const { user } = useUser();
   const router = useRouter();
+  const [userCourse, setUserCourse] = useState();
   const enrollCourse = async () => {
     if (user) {
       await EnrollCourse(
         courseDetail.id,
         user.primaryEmailAddress.emailAddress
-      ).then((resp) => {
+      ).then(async (resp) => {
         console.log("EnrollCourseResp=>", resp);
+        if (resp) {
+          await PublishCourse(resp?.createUserEnrollCourse?.id).then(
+            (result) => {
+              console.log(result);
+              if (result) {
+                router.push("/view-course/" + courseDetail.id);
+              }
+            }
+          );
+        }
       });
     } else {
       router.push("/sign-in");
@@ -21,7 +33,21 @@ function EnrollmentSection({ courseDetail }) {
 
   return (
     <div>
-      {courseDetail.free ? (
+      {userCourse?.courseId ? (
+        <div className="mt-5 border rounded-lg p-2 text-center">
+          <h2 className="text-gray-500">
+            Continue To Build Project, Access Source Code and Track Your
+            Progress for free!
+          </h2>
+          <button
+            className="p-2 w-full bg-blue-500 text-white rounded-lg text[14px] mt-2 hover:bg-blue-700"
+            onClick={() => router.push("/view-course" + courseDetail.id)}
+          >
+            Countinue
+          </button>
+        </div>
+      ) : null}
+      {courseDetail.free && !userCourse?.courseId ? (
         <div className="mt-5 border rounded-lg p-2 text-center">
           <h2 className="text-gray-500">
             Learn and Build Project, Access Source Code and Track Your Progress

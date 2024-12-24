@@ -9,13 +9,16 @@ import { useUser } from "@clerk/nextjs";
 
 function CoursePreview({ params }) {
   const [courseDetail, setCourseDetail] = useState([]);
-  const {user} = useUser();
+  const { user } = useUser();
   useEffect(() => {
     params?.courseId ? getCourse(params.courseId) : null;
   }, [user]);
 
   const getCourse = () => {
-    getCourseById(params.courseId,user?.primaryEmailAddress?.emailAddress).then((resp) => {
+    getCourseById(
+      params.courseId,
+      user?.primaryEmailAddress?.emailAddress
+    ).then((resp) => {
       console.log(resp);
       setCourseDetail(resp.courseList);
     });
